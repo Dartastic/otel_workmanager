@@ -60,10 +60,16 @@ void main() {
       expect(span.kind, equals(SpanKind.producer));
       expect(span.name, equals('workmanager register_one_off sync-uploads'));
       final attrs = _attrs(span);
-      expect(attrs['task.system'], equals('workmanager'));
-      expect(attrs['task.operation'], equals('register_one_off'));
-      expect(attrs['task.name'], equals('sync-uploads'));
-      expect(attrs['task.kind'], equals('upload-pending-photos'));
+      expect(attrs[WorkmanagerSemantics.taskSystem.key], equals('workmanager'));
+      expect(
+        attrs[WorkmanagerSemantics.taskOperation.key],
+        equals('register_one_off'),
+      );
+      expect(attrs[WorkmanagerSemantics.taskName.key], equals('sync-uploads'));
+      expect(
+        attrs[WorkmanagerSemantics.taskKind.key],
+        equals('upload-pending-photos'),
+      );
     });
 
     test('execute emits CONSUMER span', () async {
@@ -77,8 +83,24 @@ void main() {
       expect(span.kind, equals(SpanKind.consumer));
       expect(span.name, equals('workmanager execute upload-pending-photos'));
       final attrs = _attrs(span);
-      expect(attrs['task.operation'], equals('execute'));
-      expect(attrs['task.name'], equals('upload-pending-photos'));
+      expect(attrs[WorkmanagerSemantics.taskOperation.key], equals('execute'));
+      expect(
+        attrs[WorkmanagerSemantics.taskName.key],
+        equals('upload-pending-photos'),
+      );
+    });
+
+    test('execute records input-data size, never contents', () async {
+      await tracedWorkmanagerExecute<bool>(
+        taskName: 'sync',
+        inputData: {'photoId': '123', 'quality': 'high'},
+        body: () async => true,
+      );
+
+      final attrs = _attrs(exporter.spans.single);
+      expect(attrs[WorkmanagerSemantics.taskInputDataSize.key], equals(2));
+      expect(attrs.values, isNot(contains('123')));
+      expect(attrs.values, isNot(contains('high')));
     });
 
     test('exception flips span to Error', () async {

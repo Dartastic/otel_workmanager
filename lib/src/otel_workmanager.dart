@@ -3,6 +3,7 @@
 
 import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
 
+import 'workmanager_semantics.dart';
 import 'workmanager_suppression.dart';
 
 const _tracerName = 'otel_workmanager';
@@ -24,10 +25,10 @@ Future<R> tracedWorkmanagerRegister<R>({
     'workmanager $operation $uniqueName',
     kind: SpanKind.producer,
     attributes: OTel.attributesFromMap(<String, Object>{
-      'task.system': _taskSystem,
-      'task.operation': operation,
-      'task.name': uniqueName,
-      if (taskName != null) 'task.kind': taskName,
+      WorkmanagerSemantics.taskSystem.key: _taskSystem,
+      WorkmanagerSemantics.taskOperation.key: operation,
+      WorkmanagerSemantics.taskName.key: uniqueName,
+      if (taskName != null) WorkmanagerSemantics.taskKind.key: taskName,
     }),
   );
   try {
@@ -35,7 +36,7 @@ Future<R> tracedWorkmanagerRegister<R>({
   } catch (e, st) {
     span.addAttributes(OTel.attributes([
       OTel.attributeString(
-        ErrorResource.errorType.key,
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]));
@@ -81,10 +82,11 @@ Future<R> tracedWorkmanagerExecute<R>({
     'workmanager execute $taskName',
     kind: SpanKind.consumer,
     attributes: OTel.attributesFromMap(<String, Object>{
-      'task.system': _taskSystem,
-      'task.operation': 'execute',
-      'task.name': taskName,
-      if (inputData != null) 'task.input_data.size': inputData.length,
+      WorkmanagerSemantics.taskSystem.key: _taskSystem,
+      WorkmanagerSemantics.taskOperation.key: 'execute',
+      WorkmanagerSemantics.taskName.key: taskName,
+      if (inputData != null)
+        WorkmanagerSemantics.taskInputDataSize.key: inputData.length,
     }),
   );
   try {
@@ -92,7 +94,7 @@ Future<R> tracedWorkmanagerExecute<R>({
   } catch (e, st) {
     span.addAttributes(OTel.attributes([
       OTel.attributeString(
-        ErrorResource.errorType.key,
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]));

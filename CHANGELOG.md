@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.0-beta.1-wip]
+## [0.1.0-wip]
 
 ### Added
 
@@ -14,4 +14,13 @@
   inside that isolate.
 - Zone-scoped suppression
   (`runWithoutWorkmanagerInstrumentation` / async variant).
-- 4 tests.
+- `WorkmanagerSemantics` enum for the `task.*` attribute keys
+  (no registry background-task convention exists yet).
+- `example/example.md` covering both isolates.
+- 5 tests.
+
+### Changed
+
+- `workmanager` constraint widened to `>=0.6.0 <0.11.0`
+  (supports the latest 0.10.x; no workmanager API is called
+  directly).

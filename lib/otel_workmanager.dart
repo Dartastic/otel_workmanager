@@ -5,4 +5,5 @@
 library;
 
 export 'src/otel_workmanager.dart';
+export 'src/workmanager_semantics.dart';
 export 'src/workmanager_suppression.dart';
