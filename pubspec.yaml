@@ -1,7 +1,7 @@
 name: otel_workmanager
 description: OpenTelemetry instrumentation for `package:workmanager`.
   Wraps background-task registration and execution with task.* spans.
-version: 0.1.0
+version: 0.2.0-wip
 repository: https://github.com/dartastic/otel_workmanager
 homepage: https://dartastic.io
 
