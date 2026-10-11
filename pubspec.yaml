@@ -1,7 +1,7 @@
 name: otel_workmanager
 description: OpenTelemetry instrumentation for `package:workmanager`.
   Wraps background-task registration and execution with task.* spans.
-version: 1.0.0-wip
+version: 0.2.0-wip
 repository: https://github.com/dartastic/otel_workmanager
 homepage: https://dartastic.io
 
@@ -10,7 +10,6 @@ environment:
   flutter: ">=3.0.0"
 
 dependencies:
-  dartastic_opentelemetry: ^1.1.0-beta.17
   dartastic_opentelemetry_api: '>=1.0.0-rc.4 <1.0.0-rc.5'
   flutter:
     sdk: flutter
@@ -18,6 +17,7 @@ dependencies:
 
 dev_dependencies:
   dart_flutter_team_lints: ^3.5.2
+  dartastic_opentelemetry: ^1.1.0-beta.17
   flutter_test:
     sdk: flutter
   pub_semver: ^2.0.0
