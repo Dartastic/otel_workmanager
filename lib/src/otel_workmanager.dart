@@ -1,7 +1,7 @@
 // Licensed under the Apache License, Version 2.0
 // Copyright 2025, Mindful Software LLC, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'workmanager_semantics.dart';
 import 'workmanager_suppression.dart';
@@ -9,7 +9,7 @@ import 'workmanager_suppression.dart';
 const _tracerName = 'otel_workmanager';
 const _taskSystem = 'workmanager';
 
-Tracer _tracer() => OTel.tracerProvider().getTracer(_tracerName);
+APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 /// Generic helper for the registration-side spans (called from the
 /// app's main isolate). PRODUCER kind because we're scheduling
@@ -24,7 +24,7 @@ Future<R> tracedWorkmanagerRegister<R>({
   final span = _tracer().startSpan(
     'workmanager $operation $uniqueName',
     kind: SpanKind.producer,
-    attributes: OTel.attributesFromMap(<String, Object>{
+    attributes: OTelAPI.attributesFromMap(<String, Object>{
       WorkmanagerSemantics.taskSystem.key: _taskSystem,
       WorkmanagerSemantics.taskOperation.key: operation,
       WorkmanagerSemantics.taskName.key: uniqueName,
@@ -34,8 +34,8 @@ Future<R> tracedWorkmanagerRegister<R>({
   try {
     return await invoke();
   } catch (e, st) {
-    span.addAttributes(OTel.attributes([
-      OTel.attributeString(
+    span.addAttributes(OTelAPI.attributes([
+      OTelAPI.attributeString(
         ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
@@ -81,7 +81,7 @@ Future<R> tracedWorkmanagerExecute<R>({
   final span = _tracer().startSpan(
     'workmanager execute $taskName',
     kind: SpanKind.consumer,
-    attributes: OTel.attributesFromMap(<String, Object>{
+    attributes: OTelAPI.attributesFromMap(<String, Object>{
       WorkmanagerSemantics.taskSystem.key: _taskSystem,
       WorkmanagerSemantics.taskOperation.key: 'execute',
       WorkmanagerSemantics.taskName.key: taskName,
@@ -92,8 +92,8 @@ Future<R> tracedWorkmanagerExecute<R>({
   try {
     return await body();
   } catch (e, st) {
-    span.addAttributes(OTel.attributes([
-      OTel.attributeString(
+    span.addAttributes(OTelAPI.attributes([
+      OTelAPI.attributeString(
         ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
